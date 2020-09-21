@@ -3,6 +3,7 @@ package lib
 import (
 	"errors"
 	"fmt"
+	"go_shell/conf"
 	"io"
 	"log"
 	"os/exec"
@@ -14,7 +15,7 @@ func asyncLog(reader io.ReadCloser) error {
 	buf := make([]byte, 1024)
 	for {
 		num, err := reader.Read(buf)
-		if err != nil && err!=io.EOF{
+		if err != nil && err != io.EOF {
 			return err
 		}
 		if num > 0 {
@@ -29,19 +30,12 @@ func asyncLog(reader io.ReadCloser) error {
 	return nil
 }
 
-var Shells = []string{
-	"curl",
-}
-var ShellMap = map[string]string{
-	"curl" :"./scripts/curl.sh",
-}
-
 func Execute(key string) error {
-	shStr, ok := ShellMap[key]
+	shCmd, ok := conf.Cfg.ShellMap[key]
 	if !ok {
-		return errors.New("no key .... key:"+key)
+		return errors.New("no key .... key:" + key)
 	}
-	cmd := exec.Command("sh", "-c", shStr)
+	cmd := exec.Command("sh", "-c", shCmd.Cmd)
 
 	stdout, _ := cmd.StdoutPipe()
 	stderr, _ := cmd.StderrPipe()
@@ -62,20 +56,20 @@ func Execute(key string) error {
 	return nil
 }
 
-
-func QuickExecute(key string) (string,error) {
-	shStr, ok := ShellMap[key]
+func QuickExecute(key string) (string, error) {
+	shCmd, ok := conf.Cfg.ShellMap[key]
 	if !ok {
-		return "",errors.New("no key .... key:"+key)
+		return "", errors.New("no key .... key:" + key)
 	}
-	cmd := exec.Command("sh", "-c", shStr)
 
-	// 收返回值[]byte, error
-	out,err:= cmd.Output()
+	cmd := exec.Command("sh", "-c", shCmd.Cmd)
+	out, err := cmd.Output()
 	if err != nil {
 		return "", err
 	}
 
+	outStr := string(out)
+	outArr := strings.Split(outStr, "\n")
 
-	return string(out), nil
+	return strings.Join(outArr, "<br/>"), nil
 }
