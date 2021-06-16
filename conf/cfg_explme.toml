@@ -1,0 +1,9 @@
+shells = ["curl_test"]
+
+sync_shells = []
+
+
+[shell_map]
+    [shell_map.curl_test]
+    name = "测试curl"
+    cmd = "./scripts/curl.sh"

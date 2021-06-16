@@ -19,13 +19,13 @@ func Index(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	res := "<html><h2>监控数据采集：</h2>"
+	res := "<html><h2>测试脚本：</h2>"
 	for _, act := range conf.Cfg.Shells {
 		res += fmt.Sprint("<a href='/doExecte?username=", username, "&pass=", pass, "&sh=", act, "'>", conf.Cfg.ShellMap[act].Name, "<a/><br/>")
 	}
 	res += "<br /><br />"
 
-	res += "<h2>资源同步采集：</h2>"
+	res += "<h2>另外脚本：</h2>"
 	for _, act := range conf.Cfg.SyncShells {
 		res += fmt.Sprint("<a href='/doExecte?username=", username, "&pass=", pass, "&sh=", act, "'>", conf.Cfg.ShellMap[act].Name, "<a/><br/>")
 	}

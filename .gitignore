@@ -16,4 +16,4 @@
 .idea
 bin/*
 go.sum
-conf/*.toml
+conf/cfg.toml
